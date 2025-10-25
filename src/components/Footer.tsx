@@ -15,7 +15,7 @@ export const Footer: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center">
               <img
-                src="/public/LEGACY PEPTIDES lOGO.png"
+                src="LEGACY PEPTIDES lOGO.png"
                 alt="Legacy Peptides"
                 className="h-12 w-12 object-contain"
               />

@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, toggleMenu, onCartOp
             {/* Logo */}
             <div className="flex items-center">
               <img
-                src="/public/LEGACY PEPTIDES lOGO.png"
+                src="LEGACY PEPTIDES lOGO.png"
                 alt="Legacy Peptides"
                 className="h-16 w-16 object-contain"
               />

@@ -73,8 +73,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
               customerEmail: 'researcher@university.edu',
               customerName: 'Dr. Sarah Johnson',
               items: [
-                { id: '1', name: 'BPC-157', price: 89.99, quantity: 2, image: '/BPC-TB 5-5MG.png' },
-                { id: '2', name: 'TB-500', price: 124.99, quantity: 1, image: '/BPC-TB 5-5MG.png' }
+                { id: '1', name: 'BPC-157', price: 89.99, quantity: 2, image: 'BPC-TB 5-5MG.png' },
+                { id: '2', name: 'TB-500', price: 124.99, quantity: 1, image: 'BPC-TB 5-5MG.png' }
               ],
               subtotal: 304.97,
               tax: 24.40,

@@ -75,7 +75,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
     name: 'BACTERIOSTATIC WATER 3ML',
     price: 0,
     quantity: 1,
-    image: '/BACTERIOSTATIC WATER 3ML.png',
+    image: 'BACTERIOSTATIC WATER 3ML.png',
     category: 'Free Gift'
   };
 

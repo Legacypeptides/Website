@@ -83,7 +83,7 @@ export const AboutUsSection: React.FC = () => {
             {/* Founders Photo */}
             <div className="text-center mb-8">
               <img
-                src="/Amanda and I copy.jpg"
+                src="Amanda and I copy.jpg"
                 alt="Zach and Amanda, Founders of Legacy Peptides"
                 className="w-48 h-48 object-cover rounded-full mx-auto border-4 border-gold-400 shadow-2xl"
               />
@@ -114,7 +114,7 @@ export const AboutUsSection: React.FC = () => {
               <div className="mt-8 pt-6 border-t border-blue-700">
                 <div className="text-center">
                   <img
-                    src="/Zach and Amanda Signature copy.png"
+                    src="Zach and Amanda Signature copy.png"
                     alt="Zach and Amanda Signature"
                     className="mx-auto mb-4 max-w-xs opacity-90"
                   />

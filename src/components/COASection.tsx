@@ -213,10 +213,10 @@ export const COASection: React.FC = () => {
               {/* COA Image */}
               <div className="bg-gray-50 rounded-lg p-2">
                 <img
-                  src={`/coas/${coa.fileName}`}
+                  src={`coas/${coa.fileName}`}
                   alt={`COA for ${coa.productName}`}
                   className="w-full h-48 object-contain rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => setSelectedCOA(`/coas/${coa.fileName}`)}
+                  onClick={() => setSelectedCOA(`coas/${coa.fileName}`)}
                 />
               </div>
             </div>
