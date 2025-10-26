@@ -2,8 +2,7 @@ name: Deploy to Hostinger via FTP
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   ftp-deploy:
@@ -23,33 +22,30 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # 🔎 Show what's produced so we can see the structure in logs
-      - name: Show build output
+      - name: Show build output (for logs)
         run: |
           echo "PWD: $(pwd)"
           ls -la
-          echo "---- dist ----"
-          ls -la dist || true
-          echo "---- dist/legacy-peptides ----"
-          ls -la dist/legacy-peptides || true
-          echo "---- dist/legacy-peptides/browser ----"
-          ls -la dist/legacy-peptides/browser || true
-          echo "---- build ----"
-          ls -la build || true
+          echo "---- dist ----"; ls -la dist || true
+          echo "---- dist/legacy-peptides ----"; ls -la dist/legacy-peptides || true
+          echo "---- dist/legacy-peptides/browser ----"; ls -la dist/legacy-peptides/browser || true
+          echo "---- build ----"; ls -la build || true
 
-      # ✅ Detect the real output directory
+      # Detect the actual build folder
       - name: Detect output directory
         id: outdir
         shell: bash
         run: |
           for d in \
-            dist/legacy-peptides/browser \
-            dist/browser \
-            dist \
-            build
+            "dist/legacy-peptides/browser" \
+            "dist/browser" \
+            "dist" \
+            "build"
           do
             if [ -d "$d" ]; then
               echo "Found output dir: $d"
+              # ensure it ends with a slash because the action expects that
+              [[ "$d" == */ ]] || d="$d/"
               echo "dir=$d" >> "$GITHUB_OUTPUT"
               exit 0
             fi
@@ -58,16 +54,15 @@ jobs:
           echo "No build output directory found!" >&2
           exit 1
 
-      # ⬆️ Upload to Hostinger public_html/
       - name: FTP Deploy to Hostinger
         if: steps.outdir.outputs.dir != ''
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}         # e.g. 191.101.13.105 (no ftp://)
-          username: ${{ secrets.FTP_USERNAME }}     # e.g. u2012...
+          server: ${{ secrets.FTP_SERVER }}       # e.g. 191.101.13.105 (no ftp://)
+          username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          local-dir: ${{ steps.outdir.outputs.dir }}  # <-- auto-detected path
+          local-dir: ${{ steps.outdir.outputs.dir }}  # <-- now guaranteed to end with /
           server-dir: public_html/
           exclude: |
             **/.git**
