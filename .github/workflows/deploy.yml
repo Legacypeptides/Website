@@ -6,9 +6,8 @@ on:
       - main
 
 jobs:
-  deploy:
+  ftp-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,17 +23,28 @@ jobs:
       - name: Build project
         run: npm run build
 
+      # 🔎 Debug the build output so we know the real folder name
+      - name: Show build output
+        run: |
+          echo "PWD: $(pwd)"
+          ls -la
+          echo "===== dist (top level) ====="
+          ls -la dist || true
+          echo "===== dist (subdirs) ====="
+          find dist -maxdepth 2 -type d -print || true
+
+      # ⬆️ Upload everything inside "dist" recursively to public_html/
       - name: FTP Deploy to Hostinger
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}        # example: 191.101.13.105
+          server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          local-dir: dist/legacy-peptides/browser/ # adjust if your build folder differs
-          server-dir: public_html/                 # adjust if Hostinger shows a different folder
+          local-dir: dist
+          server-dir: public_html/
           exclude: |
-            **/.git*
+            **/.git**
             **/node_modules/**
             **/src/**
             **/README.md
