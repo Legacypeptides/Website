@@ -23,25 +23,51 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # 🔎 Debug the build output so we know the real folder name
+      # 🔎 Show what's produced so we can see the structure in logs
       - name: Show build output
         run: |
           echo "PWD: $(pwd)"
           ls -la
-          echo "===== dist (top level) ====="
+          echo "---- dist ----"
           ls -la dist || true
-          echo "===== dist (subdirs) ====="
-          find dist -maxdepth 2 -type d -print || true
+          echo "---- dist/legacy-peptides ----"
+          ls -la dist/legacy-peptides || true
+          echo "---- dist/legacy-peptides/browser ----"
+          ls -la dist/legacy-peptides/browser || true
+          echo "---- build ----"
+          ls -la build || true
 
-      # ⬆️ Upload everything inside "dist" recursively to public_html/
+      # ✅ Detect the real output directory
+      - name: Detect output directory
+        id: outdir
+        shell: bash
+        run: |
+          for d in \
+            dist/legacy-peptides/browser \
+            dist/browser \
+            dist \
+            build
+          do
+            if [ -d "$d" ]; then
+              echo "Found output dir: $d"
+              echo "dir=$d" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done
+          echo "dir=" >> "$GITHUB_OUTPUT"
+          echo "No build output directory found!" >&2
+          exit 1
+
+      # ⬆️ Upload to Hostinger public_html/
       - name: FTP Deploy to Hostinger
+        if: steps.outdir.outputs.dir != ''
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
+          server: ${{ secrets.FTP_SERVER }}         # e.g. 191.101.13.105 (no ftp://)
+          username: ${{ secrets.FTP_USERNAME }}     # e.g. u2012...
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          local-dir: dist
+          local-dir: ${{ steps.outdir.outputs.dir }}  # <-- auto-detected path
           server-dir: public_html/
           exclude: |
             **/.git**
