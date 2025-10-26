@@ -12,14 +12,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # If your Angular output path is different, change local-dir below
+      # Common Angular 17 path is: dist/<project-name>/browser
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ secrets.FTP_SERVER }}     # e.g. 191.101.13.105  (NO ftp:// prefix)
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: public_html
           protocol: ftp
           port: 21
           security: explicit
           passive: true
+          local-dir: dist/legacy-peptides/browser/   # <-- change if your folder name differs
+          server-dir: public_html/                   # Hostinger’s web root
+          exclude: |
+            **/.git*
+            **/node_modules/**
+            **/src/**
+            **/README.md
