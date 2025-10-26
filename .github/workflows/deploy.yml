@@ -11,7 +11,6 @@ runs-on: ubuntu-latest
 steps:
 - name: Checkout code
 uses: actions/checkout@v3
-
 - name: Upload files to Hostinger
 uses: SamKirkland/FTP-Deploy-Action@v4.3.5
 with:
