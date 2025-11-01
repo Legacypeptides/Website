@@ -1,4 +1,4 @@
-name: Build & Deploy Vite site to Hostinger via FTP
+name: Build & Deploy Vite site to Hostinger via SFTP
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
         run: |
           echo "=== DIST CONTENTS ==="
           ls -la ./dist || true
-          find ./dist -maxdepth 2 -type f -print || true
+          find ./dist -maxdepth 3 -type f -print || true
 
       - name: Copy .htaccess into dist
         run: |
@@ -46,13 +46,15 @@ jobs:
             echo ".htaccess not found in repo root"
           fi
 
-      - name: Upload build to Hostinger via FTP
+      - name: Upload build to Hostinger via SFTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.HOSTINGER_FTP_HOST }}
           username: ${{ secrets.HOSTINGER_FTP_USER }}
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+          protocol: sftp
           port: ${{ secrets.HOSTINGER_FTP_PORT }}
           server-dir: /public_html/
           local-dir: ./dist/
-          git-ftp-args: '--insecure --verbose --syncroot ./dist'
+          timeout: 120
+          log-level: DEBUG
