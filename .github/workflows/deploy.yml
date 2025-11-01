@@ -35,19 +35,16 @@ jobs:
         run: |
           echo "=== DIST CONTENTS ==="
           ls -la ./dist || true
-          find ./dist -maxdepth 2 -type f -print
+          find ./dist -maxdepth 2 -type f -print || true
 
-      - name: Add .htaccess to dist (fix content-type if needed)
+      - name: Copy .htaccess into dist
         run: |
-          cat > ./dist/.htaccess <<'HTACCESS'
-<IfModule mod_mime.c>
-  AddType application/javascript .js .mjs
-  AddType text/css .css
-  AddType image/svg+xml .svg
-  AddType application/json .json
-</IfModule>
-HTACCESS
-          echo ".htaccess added to dist"
+          if [ -f .htaccess ]; then
+            cp .htaccess ./dist/.htaccess
+            echo ".htaccess copied into dist"
+          else
+            echo ".htaccess not found in repo root"
+          fi
 
       - name: Upload build to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -58,4 +55,4 @@ HTACCESS
           port: ${{ secrets.HOSTINGER_FTP_PORT }}
           server-dir: /public_html/
           local-dir: ./dist/
-          git-ftp-args: --insecure --verbose
+          git-ftp-args: '--insecure --verbose --syncroot ./dist'
