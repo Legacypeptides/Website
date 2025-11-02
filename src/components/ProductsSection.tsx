@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { CheckCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface Product {
@@ -45,11 +46,18 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onProductSelec
 
     if (error) {
       console.error('Error loading products:', error);
+      setProducts(hardcodedProducts);
       setLoading(false);
       return;
     }
 
-    const formattedProducts: Product[] = (data || []).map((p: any) => ({
+    if (!data || data.length === 0) {
+      setProducts(hardcodedProducts);
+      setLoading(false);
+      return;
+    }
+
+    const formattedProducts: Product[] = data.map((p: any) => ({
       id: p.product_id,
       name: p.name,
       category: p.category,
