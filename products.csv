@@ -1,0 +1,38 @@
+id,product_id,name,description,price,strength,image_url
+d7f8e9a0-1b2c-3d4e-5f6a-7b8c9d0e1f2a,bpc-157-5mg,BPC-157 5mg,Body Protection Compound promotes healing of muscle and tendon injuries. Supports gut health and accelerates recovery.,49.99,5mg,/BPC-157 10mg.png
+a1b2c3d4-e5f6-7890-1234-567890abcdef,bpc-157-10mg,BPC-157 10mg,Body Protection Compound promotes healing of muscle and tendon injuries. Supports gut health and accelerates recovery.,79.99,10mg,/BPC-157 10MG.png
+b2c3d4e5-f6a7-8901-2345-678901bcdef0,tb-500-5mg,TB-500 5mg,Thymosin Beta-4 fragment promotes tissue repair and reduces inflammation. Enhances recovery and flexibility.,54.99,5mg,/TB-500 10MG.png
+c3d4e5f6-a7b8-9012-3456-789012cdef01,tb-500-10mg,TB-500 10mg,Thymosin Beta-4 fragment promotes tissue repair and reduces inflammation. Enhances recovery and flexibility.,89.99,10mg,/TB-500 10MG.png
+d4e5f6a7-b8c9-0123-4567-890123def012,ipamorelin-5mg,Ipamorelin 5mg,Growth hormone secretagogue that promotes lean muscle growth and fat metabolism without affecting cortisol levels.,44.99,5mg,/IPAMORELIN.png
+e5f6a7b8-c9d0-1234-5678-901234ef0123,ipamorelin-10mg,Ipamorelin 10mg,Growth hormone secretagogue that promotes lean muscle growth and fat metabolism without affecting cortisol levels.,74.99,10mg,/IPAMORELIN copy.png
+f6a7b8c9-d0e1-2345-6789-012345f01234,cjc-1295-5mg,CJC-1295 5mg,Modified growth hormone releasing hormone that increases GH and IGF-1 levels for enhanced muscle growth.,52.99,5mg,/CJC-1295IPAMORELINE 5MG.png
+a7b8c9d0-e1f2-3456-7890-123456012345,cjc-ipamorelin-5mg,CJC-1295 + Ipamorelin 5mg,Synergistic blend combining CJC-1295 and Ipamorelin for optimal growth hormone release and recovery.,64.99,5mg,/CJC-1295IPAMORELINE 5MG copy.png
+b8c9d0e1-f2a3-4567-8901-234567123456,ghk-cu-50mg,GHK-Cu 50mg,Copper peptide complex that promotes collagen synthesis and skin regeneration. Powerful anti-aging properties.,59.99,50mg,/GHK-CU 50MG.png
+c9d0e1f2-a3b4-5678-9012-345678234567,selank-5mg,Selank 5mg,Anxiolytic nootropic peptide that reduces anxiety and enhances cognitive function without sedation.,47.99,5mg,/SELANK 5MG.png
+d0e1f2a3-b4c5-6789-0123-456789345678,semax-5mg,Semax 5mg,Nootropic peptide that enhances focus and memory. Supports neuroprotection and cognitive performance.,47.99,5mg,/SEMAX 5MG.png
+e1f2a3b4-c5d6-7890-1234-567890456789,sermorelin-10mg,Sermorelin 10mg,GHRH analog that naturally stimulates growth hormone production. Supports metabolism and body composition.,69.99,10mg,/SERMORELIN 10MG.png
+f2a3b4c5-d6e7-8901-2345-678901567890,tesamorelin-5mg,Tesamorelin 5mg,Growth hormone releasing hormone that reduces visceral fat and improves body composition.,84.99,5mg,/TESAMORELIN.png
+a3b4c5d6-e7f8-9012-3456-789012678901,tesamorelin-10mg,Tesamorelin 10mg,Growth hormone releasing hormone that reduces visceral fat and improves body composition.,99.99,10mg,/TESAMORELIN copy.png
+b4c5d6e7-f8a9-0123-4567-890123789012,tesamorelin-ipamorelin-5mg,Tesamorelin + Ipamorelin 5mg,Powerful combination for fat loss and muscle preservation. Enhances metabolic function.,79.99,5mg,/TESAMORELIN  IPAMORELIN 5MG.png
+c5d6e7f8-a9b0-1234-5678-901234890123,aod-9604-5mg,AOD-9604 5mg,Fragment of human growth hormone that promotes fat metabolism without affecting blood sugar levels.,44.99,5mg,/AOD-9604 5mg.png
+d6e7f8a9-b0c1-2345-6789-012345901234,thymosin-alpha-1-5mg,Thymosin Alpha-1 5mg,Immune system modulator that enhances T-cell function and supports overall immune response.,72.99,5mg,/THYMOSIN ALPHA-1.png
+e7f8a9b0-c1d2-3456-7890-123456012345,pt-141-10mg,PT-141 10mg,Melanocortin receptor agonist that enhances libido and sexual function in both men and women.,54.99,10mg,/PT-141 10MG.png
+f8a9b0c1-d2e3-4567-8901-234567123456,melanotan-2-10mg,Melanotan II 10mg,Melanocortin peptide that promotes tanning and may enhance libido. Use with sun exposure.,49.99,10mg,/MELANOTAN 2 10MG.png
+a9b0c1d2-e3f4-5678-9012-345678234567,melanotan-1-10mg,Melanotan I 10mg,Melanocortin analog that promotes melanin production for natural-looking tan without UV exposure.,52.99,10mg,/MELANOTAN 1 10MG.png
+b0c1d2e3-f4a5-6789-0123-456789345678,epitalon-10mg,Epitalon 10mg,Pineal peptide that may support telomere health and cellular longevity. Promotes deep sleep quality.,67.99,10mg,/EPITALON 10MG.png
+c1d2e3f4-a5b6-7890-1234-567890456789,dsip-5mg,DSIP 5mg,Delta sleep-inducing peptide that promotes deep restorative sleep and stress reduction.,42.99,5mg,/DSIP 5MG.png
+d2e3f4a5-b6c7-8901-2345-678901567890,nad-500mg,NAD+ 500mg,Nicotinamide adenine dinucleotide supports cellular energy production and mitochondrial function.,89.99,500mg,/NAD+.png
+e3f4a5b6-c7d8-9012-3456-789012678901,mots-c-10mg,MOTS-C 10mg,Mitochondrial-derived peptide that enhances metabolic function and insulin sensitivity.,74.99,10mg,/MOTS-C.png
+f4a5b6c7-d8e9-0123-4567-890123789012,ss-31-10mg,SS-31 10mg,Mitochondrial-targeted peptide that supports cellular energy and reduces oxidative stress.,82.99,10mg,/SS-31 10MG.png
+a5b6c7d8-e9f0-1234-5678-901234890123,kisspeptin-10mg,Kisspeptin-10 10mg,Hypothalamic peptide that supports reproductive hormone function and metabolic health.,69.99,10mg,/KISSPEPTIN 10MG.png
+b6c7d8e9-f0a1-2345-6789-012345901234,5-amino-1mq-10mg,5-Amino-1MQ 10mg,NNMT inhibitor that enhances NAD+ levels and promotes fat metabolism and energy expenditure.,79.99,10mg,/5-Amino-1MQ 10mg.png
+c7d8e9f0-a1b2-3456-7890-123456012345,bpc-tb500-blend-10mg,BPC-157 + TB-500 10mg,Synergistic healing blend combining two powerful recovery peptides for enhanced tissue repair.,94.99,10mg,/BPC-157 -TB500.png
+d8e9f0a1-b2c3-4567-8901-234567123456,slu-pp-332-5mg,SLU-PP-332 5mg,Novel melanocortin receptor agonist that promotes tanning with minimal side effects.,64.99,5mg,/SLU-PP-332 5MG.png
+e9f0a1b2-c3d4-5678-9012-345678234567,cagrilintide-5mg,Cagrilintide 5mg,Long-acting amylin analog that reduces appetite and promotes weight loss with improved glycemic control.,87.99,5mg,/Cagrilintide 5mg.png
+f0a1b2c3-d4e5-6789-0123-456789345678,cagrilintide-10mg,Cagrilintide 10mg,Long-acting amylin analog that reduces appetite and promotes weight loss with improved glycemic control.,99.99,10mg,/Cagrilintide 10mg.png
+a1b2c3d4-e5f6-7890-1234-678901234567,glp-1-semaglutide-5mg,GLP-1 (Semaglutide) 5mg,GLP-1 receptor agonist for weight management and improved metabolic health. Reduces appetite.,74.99,5mg,/GLP-1 (S).png
+b2c3d4e5-f6a7-8901-2345-789012345678,glp-2-tirzepatide-5mg,GLP-2 (Tirzepatide) 5mg,Dual GIP/GLP-1 receptor agonist providing superior weight loss and glycemic control.,84.99,5mg,/GLP-2 (T).png
+c3d4e5f6-a7b8-9012-3456-890123456789,glp-3-retatrutide-5mg,GLP-3 (Retatrutide) 5mg,Triple agonist targeting GLP-1 GIP and glucagon receptors for maximum metabolic benefits.,94.99,5mg,/GLP-3 (RETA).png
+d4e5f6a7-b8c9-0123-4567-901234567890,glow-blend-70mg,GLOW Peptide Blend 70mg,Comprehensive beauty blend combining GHK-Cu and collagen peptides for skin rejuvenation.,79.99,70mg,/GLOW.png
+e5f6a7b8-c9d0-1234-5678-012345678901,bacteriostatic-water-3ml,Bacteriostatic Water 3ml,Sterile bacteriostatic water for peptide reconstitution. Contains 0.9% benzyl alcohol as preservative.,9.99,3ml,/BACTERIOSTATIC WATER 3ML.png
+f6a7b8c9-d0e1-2345-6789-123456789012,bacteriostatic-water-10ml,Bacteriostatic Water 10ml,Sterile bacteriostatic water for peptide reconstitution. Contains 0.9% benzyl alcohol as preservative.,14.99,10ml,/BACTERIOSTATIC WATER 10ML.png
