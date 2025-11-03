@@ -40,7 +40,7 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onProductSelec
 
   const loadProducts = async () => {
     const { data, error } = await supabase
-      .from('products')
+      .from('products_grouped')
       .select('*')
       .order('name', { ascending: true });
 
