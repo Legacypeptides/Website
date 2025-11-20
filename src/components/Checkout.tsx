@@ -3,6 +3,7 @@ import { X, CreditCard, Smartphone, Building2, ArrowLeft, ShoppingBag, Lock, Cir
 import { useCart } from './CartProvider';
 import { supabase } from '../lib/supabase';
 import { ThankYou } from './ThankYou';
+import { sendOrderWebhook } from '../services/orderWebhook';
 
 interface CheckoutProps {
   isOpen: boolean;
@@ -248,6 +249,8 @@ export const Checkout: React.FC<CheckoutProps> = ({ isOpen, onClose, onBack }) =
         },
         body: JSON.stringify(orderData)
       });
+
+      await sendOrderWebhook(orderData);
 
       if (appliedPromo) {
         await supabase
