@@ -22,6 +22,7 @@ jobs:
         run: |
           echo "VITE_SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
           echo "VITE_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
+          echo "VITE_PODIO_WEBHOOK_URL=${{ secrets.PODIO_WEBHOOK_URL }}" >> .env
           echo "✅ .env file created"
           ls -la
 
