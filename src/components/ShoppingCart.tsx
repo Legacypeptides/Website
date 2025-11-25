@@ -27,17 +27,17 @@ const saveOrder = (orderData: any) => {
     },
     customerPhone: orderData.customerData.phone || ''
   };
-  
+
   existingOrders.push(newOrder);
   localStorage.setItem(storageKey, JSON.stringify(existingOrders));
-  
+
   // Also save to a backup location for persistence
   try {
     localStorage.setItem('legacy_orders_backup', JSON.stringify(existingOrders));
   } catch (e) {
     console.warn('Could not save order backup:', e);
   }
-  
+
   return newOrder;
 };
 
@@ -63,7 +63,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
     zip: '',
     phone: ''
   });
-  const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [discountCode, setDiscountCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState<any>(null);
   const [discountError, setDiscountError] = useState('');
@@ -104,38 +104,38 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
   };
 
   const validateForm = () => {
-    const errors: {[key: string]: string} = {};
-    
+    const errors: { [key: string]: string } = {};
+
     if (!customerData.fullName.trim()) {
       errors.fullName = 'Full name is required';
     }
-    
+
     if (!customerData.email.trim()) {
       errors.email = 'Email address is required';
     } else if (!/\S+@\S+\.\S+/.test(customerData.email)) {
       errors.email = 'Please enter a valid email address';
     }
-    
+
     if (!customerData.street.trim()) {
       errors.street = 'Street address is required';
     }
-    
+
     if (!customerData.city.trim()) {
       errors.city = 'City is required';
     }
-    
+
     if (!customerData.state.trim()) {
       errors.state = 'State is required';
     }
-    
+
     if (!customerData.zip.trim()) {
       errors.zip = 'ZIP code is required';
     }
-    
+
     if (!customerData.phone.trim()) {
       errors.phone = 'Phone number is required';
     }
-    
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -154,13 +154,13 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
     }
 
     setIsCheckingOut(true);
-    
+
     // CRITICAL: ALWAYS send to Zapier webhook first - this is the primary order processing
     // This must succeed regardless of any other operations
     try {
       // Generate unique order ID
       const orderId = `LP-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`;
-      
+
       // Helper function to get product strength
       const getProductStrength = (productName: string, price: number) => {
         switch (productName) {
@@ -231,23 +231,23 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
       };
 
       // Send to Make.com webhook - THIS IS CRITICAL AND MUST ALWAYS EXECUTE
-      await fetch('https://hook.us2.make.com/mznh6c4jkui0dlry9r2ojydxfwernd2n', {
+      await fetch('https://hook.us2.make.com/1n77klxoerm2kiog2jzznc4tn5lhoott', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(webhookData)
       });
-      
+
       console.log('✅ SUCCESS: Order data sent to Make.com webhook successfully');
       console.log('📦 Webhook Data:', webhookData);
-      
+
     } catch (error) {
       console.error('🚨 CRITICAL ERROR: Failed to send order to Make.com webhook:', error);
       // Continue with checkout process even if webhook fails
       // But this is a critical issue that needs attention
     }
-    
+
     // Secondary: Save order to local admin system (this is backup/admin functionality)
     // Save order to admin system
     const orderData = {
@@ -262,7 +262,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
       total,
       customerData
     };
-    
+
     let savedOrder;
     try {
       savedOrder = saveOrder(orderData);
@@ -274,7 +274,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
         orderNumber: orderId
       };
     }
-    
+
     // Simulate checkout process
     globalThis.setTimeout(() => {
       clearCart();
@@ -401,7 +401,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
             {/* Order Summary */}
             <div className="border-t bg-gray-50 px-6 py-4 space-y-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h3>
-              
+
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
@@ -458,7 +458,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
                 /* Checkout Form */
                 <div className="space-y-4">
                   <h4 className="text-lg font-semibold text-gray-900">Shipping Information</h4>
-                  
+
                   {/* Full Name */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -471,9 +471,8 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
                       value={customerData.fullName}
                       onChange={handleInputChange}
                       required
-                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        formErrors.fullName ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.fullName ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="Enter your full name"
                     />
                     {formErrors.fullName && (
@@ -493,9 +492,8 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
                       value={customerData.email}
                       onChange={handleInputChange}
                       required
-                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        formErrors.email ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.email ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="Enter your email address"
                     />
                     {formErrors.email && (
@@ -515,9 +513,8 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
                       value={customerData.street}
                       onChange={handleInputChange}
                       required
-                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        formErrors.street ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.street ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="Enter your street address"
                     />
                     {formErrors.street && (
@@ -537,9 +534,8 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
                         value={customerData.city}
                         onChange={handleInputChange}
                         required
-                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          formErrors.city ? 'border-red-500' : 'border-gray-300'
-                        }`}
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.city ? 'border-red-500' : 'border-gray-300'
+                          }`}
                         placeholder="Enter your city"
                       />
                       {formErrors.city && (
@@ -559,9 +555,8 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
                         value={customerData.state}
                         onChange={handleInputChange}
                         required
-                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          formErrors.state ? 'border-red-500' : 'border-gray-300'
-                        }`}
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.state ? 'border-red-500' : 'border-gray-300'
+                          }`}
                         placeholder="State"
                       />
                       {formErrors.state && (
@@ -578,9 +573,8 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
                         value={customerData.zip}
                         onChange={handleInputChange}
                         required
-                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          formErrors.zip ? 'border-red-500' : 'border-gray-300'
-                        }`}
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.zip ? 'border-red-500' : 'border-gray-300'
+                          }`}
                         placeholder="ZIP Code"
                       />
                       {formErrors.zip && (
@@ -601,9 +595,8 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
                       value={customerData.phone}
                       onChange={handleInputChange}
                       required
-                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        formErrors.phone ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.phone ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="Enter your phone number"
                     />
                     {formErrors.phone && (
