@@ -154,6 +154,14 @@ export const sendOrderToPodioViaWebhook = async (orderData: PodioOrderData, webh
       items: orderData.items,                    // Full items array
       itemsCount: orderData.items.length,        // Number of items
 
+      // Individual product fields (for easier Podio mapping)
+      // These are extracted from the first item for simplicity
+      product: orderData.items[0]?.product || '',      // Product name
+      strength: orderData.items[0]?.strength || '',    // Strength (e.g., 10mg, 3ml)
+      safecode: orderData.items[0]?.safecode || '',    // Safecode
+      quantity: orderData.items[0]?.quantity || 0,     // Quantity
+      price: orderData.items[0]?.price || 0,           // Price
+
       // ========================================
       // NESTED STRUCTURE (For advanced Make.com mapping)
       // Access via customer.email, customer.first_name, etc.
