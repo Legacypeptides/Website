@@ -59,13 +59,28 @@ export const sendOrderToPodio = async (orderData: PodioOrderData): Promise<boole
 export const sendOrderToPodioViaWebhook = async (orderData: PodioOrderData, webhookUrl: string): Promise<boolean> => {
   try {
     // Format items as a readable string for Podio
+    // Using " | " separator instead of newline to prevent Make.com from filtering it out
     const productsText = orderData.items
       .map(item => {
         const strength = item.strength ? ` (${item.strength})` : '';
         const safecode = item.safecode ? ` [${item.safecode}]` : '';
         return `${item.product}${strength}${safecode} - Qty: ${item.quantity} × $${item.price.toFixed(2)} = $${(item.price * item.quantity).toFixed(2)}`;
       })
+      .join(' | ');
+
+    // Alternative formatting with newlines for better readability
+    const productsTextWithNewlines = orderData.items
+      .map(item => {
+        const strength = item.strength ? ` (${item.strength})` : '';
+        const safecode = item.safecode ? ` [${item.safecode}]` : '';
+        return `${item.product}${strength}${safecode} - Qty: ${item.quantity} × $${item.price.toFixed(2)} = $${(item.price * item.quantity).toFixed(2)}`;
+      })
       .join('\n');
+
+    // Simple comma-separated list
+    const productsSimple = orderData.items
+      .map(item => `${item.product}${item.strength ? ` (${item.strength})` : ''}`)
+      .join(', ');
 
     // Format shipping address as a single string
     const fullAddress = [
@@ -87,7 +102,12 @@ export const sendOrderToPodioViaWebhook = async (orderData: PodioOrderData, webh
       customerName: `${orderData.customer.first_name} ${orderData.customer.last_name}`, // Map to "Customer Name"
       customerEmail: orderData.customer.email,   // Map to "Customer Email"
       totalAmount: orderData.order_total,        // Map to "Total Amount"
-      productsInOrder: productsText,             // Map to "Products in Order" (formatted text)
+
+      // Multiple product format options (use whichever works best in Make.com)
+      productsInOrder: productsText,             // Pipe-separated: "Product1 | Product2 | Product3"
+      productsWithNewlines: productsTextWithNewlines, // Newline-separated (readable)
+      productsSimple: productsSimple,            // Simple list: "Product1, Product2, Product3"
+      productsList: productsText,                // Alternative name for productsInOrder
 
       // ========================================
       // CHECKOUT FORM FIELDS (From user input)
@@ -115,7 +135,7 @@ export const sendOrderToPodioViaWebhook = async (orderData: PodioOrderData, webh
       shippingAddress: fullAddress,              // Full formatted address (multi-line)
       customerPhone: orderData.customer.phone,   // Alternative phone field name
       orderTotal: orderData.order_total,         // Alternative total field name
-      orderItems: productsText,                  // Alternative products field name
+      orderItems: productsText,                  // Alternative products field name (pipe-separated)
 
       // Address components with "shipping" prefix (for clarity)
       shippingStreet: orderData.customer.street,
