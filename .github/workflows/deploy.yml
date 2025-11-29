@@ -57,6 +57,6 @@ jobs:
           port: ${{ secrets.HOSTINGER_FTP_PORT }}
           server-dir: /public_html/
           local-dir: ./dist/
-          timeout: 180
+          timeout: 600
           log-level: verbose
           dangerous-clean-slate: true
