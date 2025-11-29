@@ -41,7 +41,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const addToCart = (product: Omit<CartItem, 'quantity'>, quantity: number) => {
     setCartItems(prev => {
       const existingItem = prev.find(item => item.id === product.id);
-      
+
       if (existingItem) {
         return prev.map(item =>
           item.id === product.id
@@ -49,7 +49,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             : item
         );
       }
-      
+
       return [...prev, { ...product, quantity }];
     });
   };
@@ -59,7 +59,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       removeItem(id);
       return;
     }
-    
+
     setCartItems(prev =>
       prev.map(item =>
         item.id === id ? { ...item, quantity } : item

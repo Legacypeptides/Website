@@ -26,13 +26,13 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onClose }) => {
     // Simulate authentication delay
     await new Promise(resolve => globalThis.setTimeout(resolve, 1000));
 
-    if (credentials.username === ADMIN_CREDENTIALS.username && 
-        credentials.password === ADMIN_CREDENTIALS.password) {
+    if (credentials.username === ADMIN_CREDENTIALS.username &&
+      credentials.password === ADMIN_CREDENTIALS.password) {
       onLogin();
     } else {
       setError('Invalid username or password');
     }
-    
+
     setIsLoading(false);
   };
 
@@ -126,14 +126,6 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onClose }) => {
             </button>
           </div>
         </form>
-
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <p className="text-xs text-blue-700">
-            <strong>Demo Credentials:</strong><br />
-            Username: admin<br />
-            Password: admin123
-          </p>
-        </div>
       </div>
     </div>
   );

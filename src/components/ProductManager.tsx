@@ -15,8 +15,16 @@ interface Product {
   detailed_description: string;
 }
 
+interface ProductInventory {
+  id: string;
+  product_id: string;
+  product_name: string;
+  is_sold_out: boolean;
+}
+
 export const ProductManager: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [inventory, setInventory] = useState<Record<string, ProductInventory>>({});
   const [isCreating, setIsCreating] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editingPrices, setEditingPrices] = useState<Record<string, number>>({});
@@ -33,6 +41,7 @@ export const ProductManager: React.FC = () => {
 
   useEffect(() => {
     loadProducts();
+    loadInventory();
   }, []);
 
   const loadProducts = async () => {
@@ -47,6 +56,23 @@ export const ProductManager: React.FC = () => {
     }
 
     setProducts(data || []);
+  };
+
+  const loadInventory = async () => {
+    const { data, error } = await supabase
+      .from('product_inventory')
+      .select('*');
+
+    if (error) {
+      console.error('Error loading inventory:', error);
+      return;
+    }
+
+    const inventoryMap: Record<string, ProductInventory> = {};
+    data?.forEach((item) => {
+      inventoryMap[item.product_id] = item;
+    });
+    setInventory(inventoryMap);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -161,6 +187,42 @@ export const ProductManager: React.FC = () => {
     delete updatedPrices[product.id];
     setEditingPrices(updatedPrices);
     loadProducts();
+  };
+
+  const toggleStockStatus = async (product: Product) => {
+    const currentInventory = inventory[product.product_id];
+    const newSoldOutStatus = !currentInventory?.is_sold_out;
+
+    if (currentInventory) {
+      // Update existing inventory record
+      const { error } = await supabase
+        .from('product_inventory')
+        .update({ is_sold_out: newSoldOutStatus, updated_at: new Date().toISOString() })
+        .eq('product_id', product.product_id);
+
+      if (error) {
+        console.error('Error updating stock status:', error);
+        alert('Failed to update stock status');
+        return;
+      }
+    } else {
+      // Create new inventory record
+      const { error } = await supabase
+        .from('product_inventory')
+        .insert([{
+          product_id: product.product_id,
+          product_name: product.name,
+          is_sold_out: newSoldOutStatus
+        }]);
+
+      if (error) {
+        console.error('Error creating inventory record:', error);
+        alert('Failed to update stock status');
+        return;
+      }
+    }
+
+    loadInventory();
   };
 
   return (
@@ -340,6 +402,9 @@ export const ProductManager: React.FC = () => {
                 Price
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Stock Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -386,6 +451,17 @@ export const ProductManager: React.FC = () => {
                       </button>
                     )}
                   </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <button
+                    onClick={() => toggleStockStatus(product)}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${inventory[product.product_id]?.is_sold_out
+                        ? 'bg-red-100 text-red-700 hover: bg-red-200'
+                        : 'bg-green-100 text-green-700 hover:bg-green-200'
+                      }`}
+                  >
+                    {inventory[product.product_id]?.is_sold_out ? 'Out of Stock' : 'In Stock'}
+                  </button>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex gap-2">

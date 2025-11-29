@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Eye, CircleCheck as CheckCircle, Clock, Truck, X, Search, ListFilter as Filter, Download, Users, Tag, Box, ShoppingBag } from 'lucide-react';
+import { Package, Eye, CircleCheck as CheckCircle, Clock, Truck, X, Search, Download, Users, Tag, Box, ShoppingBag, LogOut } from 'lucide-react';
 import { CRMPanel } from './CRMPanel';
 import { PromoCodeManager } from './PromoCodeManager';
 import { ProductInventory } from './ProductInventory';
 import { ProductManager } from './ProductManager';
+import { ConfirmModal } from './ConfirmModal';
 
 interface OrderItem {
   id: string;
@@ -37,12 +38,14 @@ interface Order {
 interface AdminPanelProps {
   isOpen: boolean;
   onClose: () => void;
+  onLogout?: () => void;
 }
 
-export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
+export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose, onLogout }) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [activeTab, setActiveTab] = useState<'orders' | 'crm' | 'promos' | 'inventory' | 'products'>('orders');
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'date' | 'total' | 'status'>('date');
@@ -54,13 +57,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
       try {
         const storageKey = 'legacy_peptides_orders_db';
         const backupKey = 'legacy_orders_backup';
-        
+
         // Try primary storage first, then backup
         let storedOrders = localStorage.getItem(storageKey);
         if (!storedOrders) {
           storedOrders = localStorage.getItem(backupKey);
         }
-        
+
         if (storedOrders) {
           const parsedOrders = JSON.parse(storedOrders);
           setOrders(parsedOrders);
@@ -101,10 +104,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
     };
 
     loadOrders();
-    
+
     // Set up periodic refresh to catch new orders
     const interval = globalThis.setInterval(loadOrders, 5000); // Refresh every 5 seconds
-    
+
     return () => globalThis.clearInterval(interval);
   }, []);
 
@@ -133,7 +136,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
   };
 
   const updateOrderStatus = (orderId: string, newStatus: Order['status']) => {
-    setOrders(prev => prev.map(order => 
+    setOrders(prev => prev.map(order =>
       order.id === orderId ? { ...order, status: newStatus } : order
     ));
   };
@@ -141,8 +144,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
   const filteredOrders = orders
     .filter(order => {
       const matchesSearch = order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           order.customerEmail.toLowerCase().includes(searchTerm.toLowerCase());
+        order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customerEmail.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
       return matchesSearch && matchesStatus;
     })
@@ -161,226 +164,254 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex">
-      <div className="bg-white w-full h-full overflow-y-auto">
+      <div className="bg-white w-full h-full flex flex-col overflow-hidden"
+      >
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between shadow-sm">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-            <p className="text-gray-600">Manage orders and customer relationships</p>
+        <div className="flex-shrink-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+              <p className="text-blue-100 text-sm">Manage orders and customer relationships</p>
+            </div>
+            <div className="flex items-center gap-3">
+              {onLogout && (
+                <button
+                  onClick={() => setShowLogoutConfirm(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors border border-white/20"
+                  title="Logout"
+                >
+                  <LogOut size={18} />
+                  <span className="text-sm font-medium">Logout</span>
+                </button>
+              )}
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                title="Close Dashboard"
+              >
+                <X size={24} />
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex bg-gray-100 rounded-lg p-1">
+
+          {/* Tab Navigation */}
+          <div className="mt-4">
+            <div className="flex bg-white/10 rounded-lg p-1 backdrop-blur-sm">
               <button
                 onClick={() => setActiveTab('orders')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activeTab === 'orders'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'orders'
+                  ? 'bg-white text-blue-600 shadow-md'
+                  : 'text-white/80 hover:text-white hover:bg-white/5'
+                  }`}
               >
                 <Package size={16} className="inline mr-2" />
                 Orders
               </button>
               <button
                 onClick={() => setActiveTab('crm')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activeTab === 'crm'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'crm'
+                  ? 'bg-white text-blue-600 shadow-md'
+                  : 'text-white/80 hover:text-white hover:bg-white/5'
+                  }`}
               >
                 <Users size={16} className="inline mr-2" />
                 CRM
               </button>
               <button
                 onClick={() => setActiveTab('promos')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activeTab === 'promos'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'promos'
+                  ? 'bg-white text-blue-600 shadow-md'
+                  : 'text-white/80 hover:text-white hover:bg-white/5'
+                  }`}
               >
                 <Tag size={16} className="inline mr-2" />
                 Promo Codes
               </button>
               <button
                 onClick={() => setActiveTab('inventory')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activeTab === 'inventory'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'inventory'
+                  ? 'bg-white text-blue-600 shadow-md'
+                  : 'text-white/80 hover:text-white hover:bg-white/5'
+                  }`}
               >
                 <Box size={16} className="inline mr-2" />
                 Inventory
               </button>
               <button
                 onClick={() => setActiveTab('products')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activeTab === 'products'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'products'
+                  ? 'bg-white text-blue-600 shadow-md'
+                  : 'text-white/80 hover:text-white hover:bg-white/5'
+                  }`}
               >
                 <ShoppingBag size={16} className="inline mr-2" />
                 Products
               </button>
             </div>
-          <button
-            onClick={onClose}
-            className="text-gray-600 hover:text-gray-800 transition-colors p-2"
-          >
-            <X size={24} />
-          </button>
           </div>
         </div>
 
-        {activeTab === 'orders' && (
-          <div className="p-6">
-          {/* Filters and Search */}
-          <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Search Orders</label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Order number, customer name..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                  />
+        {/* Content Area - Takes remaining height */}
+        <div className="flex-1 overflow-y-auto">
+          {activeTab === 'orders' && (
+            <div className="p-6">
+              {/* Filters and Search */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Search Orders</label>
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                      <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Order number, customer name..."
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Status Filter</label>
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    >
+                      <option value="all">All Status</option>
+                      <option value="pending">Pending</option>
+                      <option value="processing">Processing</option>
+                      <option value="shipped">Shipped</option>
+                      <option value="delivered">Delivered</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as 'date' | 'total' | 'status')}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    >
+                      <option value="date">Order Date</option>
+                      <option value="total">Order Total</option>
+                      <option value="status">Status</option>
+                    </select>
+                  </div>
+
+                  <div className="flex items-end">
+                    <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+                      <Download size={16} />
+                      Export CSV
+                    </button>
+                  </div>
                 </div>
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Status Filter</label>
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                >
-                  <option value="all">All Status</option>
-                  <option value="pending">Pending</option>
-                  <option value="processing">Processing</option>
-                  <option value="shipped">Shipped</option>
-                  <option value="delivered">Delivered</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
+
+              {/* Orders Table */}
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Order
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Customer
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Items
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Total
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Date
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {filteredOrders.map((order) => (
+                        <tr key={order.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="font-medium text-gray-900">{order.orderNumber}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div>
+                              <div className="font-medium text-gray-900">{order.customerName}</div>
+                              <div className="text-sm text-gray-500">{order.customerEmail}</div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">
+                              {order.items.length} item{order.items.length !== 1 ? 's' : ''}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="font-medium text-gray-900">${order.total.toFixed(2)}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                              {getStatusIcon(order.status)}
+                              {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {new Date(order.orderDate).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button
+                              onClick={() => setSelectedOrder(order)}
+                              className="text-blue-600 hover:text-blue-900 flex items-center gap-1"
+                            >
+                              <Eye size={16} />
+                              View
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as 'date' | 'total' | 'status')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                >
-                  <option value="date">Order Date</option>
-                  <option value="total">Order Total</option>
-                  <option value="status">Status</option>
-                </select>
-              </div>
-
-              <div className="flex items-end">
-                <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-                  <Download size={16} />
-                  Export CSV
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Orders Table */}
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Order
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Customer
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Items
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Total
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredOrders.map((order) => (
-                    <tr key={order.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="font-medium text-gray-900">{order.orderNumber}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div>
-                          <div className="font-medium text-gray-900">{order.customerName}</div>
-                          <div className="text-sm text-gray-500">{order.customerEmail}</div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {order.items.length} item{order.items.length !== 1 ? 's' : ''}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="font-medium text-gray-900">${order.total.toFixed(2)}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                          {getStatusIcon(order.status)}
-                          {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(order.orderDate).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button
-                          onClick={() => setSelectedOrder(order)}
-                          className="text-blue-600 hover:text-blue-900 flex items-center gap-1"
-                        >
-                          <Eye size={16} />
-                          View
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {filteredOrders.length === 0 && (
-            <div className="text-center py-12">
-              <Package className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                {searchTerm || statusFilter !== 'all' ? 'Try adjusting your filters' : 'Orders will appear here when customers make purchases'}
-              </p>
+              {filteredOrders.length === 0 && (
+                <div className="text-center py-12">
+                  <Package className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {searchTerm || statusFilter !== 'all' ? 'Try adjusting your filters' : 'Orders will appear here when customers make purchases'}
+                  </p>
+                </div>
+              )}
             </div>
           )}
-        </div>
-        )}
 
-        {activeTab === 'crm' && (
-          <CRMPanel isOpen={true} onClose={() => setActiveTab('orders')} />
-        )}
+          {activeTab === 'crm' && (
+            <CRMPanel isOpen={true} onClose={() => setActiveTab('orders')} />
+          )}
+
+          {activeTab === 'promos' && (
+            <PromoCodeManager />
+          )}
+
+          {activeTab === 'inventory' && (
+            <ProductInventory />
+          )}
+
+          {activeTab === 'products' && (
+            <ProductManager />
+          )}
+        </div>
       </div>
 
       {/* Order Detail Modal */}
@@ -470,11 +501,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                     <button
                       key={status}
                       onClick={() => updateOrderStatus(selectedOrder.id, status as Order['status'])}
-                      className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                        selectedOrder.status === status
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-100'
-                      }`}
+                      className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${selectedOrder.status === status
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-100'
+                        }`}
                     >
                       {status.charAt(0).toUpperCase() + status.slice(1)}
                     </button>
@@ -494,17 +524,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
         </div>
       )}
 
-      {activeTab === 'promos' && (
-        <PromoCodeManager />
-      )}
-
-      {activeTab === 'inventory' && (
-        <ProductInventory />
-      )}
-
-      {activeTab === 'products' && (
-        <ProductManager />
-      )}
+      {/* Logout Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showLogoutConfirm}
+        title="Confirm Logout"
+        message="Are you sure you want to logout? You will need to login again to access the admin dashboard."
+        confirmText="Logout"
+        cancelText="Cancel"
+        variant="warning"
+        onConfirm={() => {
+          setShowLogoutConfirm(false);
+          onLogout?.();
+        }}
+        onCancel={() => setShowLogoutConfirm(false)}
+      />
     </div>
   );
 };

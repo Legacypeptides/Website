@@ -35,7 +35,7 @@ export const DragDropEditor: React.FC<DragDropEditorProps> = ({
 
   const handleDrop = (e: React.DragEvent, targetId: string) => {
     e.preventDefault();
-    
+
     if (!draggedItem || draggedItem === targetId) return;
 
     const draggedIndex = sections.findIndex(s => s.id === draggedItem);

@@ -44,9 +44,17 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(() => {
+    // Keep admin panel open if logged in and was previously open
+    const isLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
+    const wasOpen = localStorage.getItem('admin_panel_open') === 'true';
+    return isLoggedIn && wasOpen;
+  });
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
+    // Check localStorage for existing admin session
+    return localStorage.getItem('admin_logged_in') === 'true';
+  });
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const handleProductSelect = (product: Product) => setSelectedProduct(product);
@@ -62,7 +70,7 @@ function App() {
     setIsCheckoutOpen(false);
     setIsCartOpen(true);
   };
-  
+
   const handleAdminOpen = () => {
     if (isAdminLoggedIn) {
       setIsAdminOpen(true);
@@ -70,14 +78,26 @@ function App() {
       setIsAdminLoginOpen(true);
     }
   };
-  
+
   const handleAdminLogin = () => {
     setIsAdminLoggedIn(true);
+    localStorage.setItem('admin_logged_in', 'true');
     setIsAdminLoginOpen(false);
     setIsAdminOpen(true);
+    localStorage.setItem('admin_panel_open', 'true');
   };
-  
-  const handleAdminClose = () => setIsAdminOpen(false);
+
+  const handleAdminLogout = () => {
+    setIsAdminLoggedIn(false);
+    localStorage.removeItem('admin_logged_in');
+    localStorage.removeItem('admin_panel_open');
+    setIsAdminOpen(false);
+  };
+
+  const handleAdminClose = () => {
+    setIsAdminOpen(false);
+    localStorage.setItem('admin_panel_open', 'false');
+  };
   const handleAdminLoginClose = () => setIsAdminLoginOpen(false);
 
   const handleProductUpdate = (updatedProduct: Product) => {
@@ -88,20 +108,20 @@ function App() {
   return (
     <CartProvider>
       <div className="min-h-screen bg-white">
-        <Header 
-          isMenuOpen={isMenuOpen} 
+        <Header
+          isMenuOpen={isMenuOpen}
           toggleMenu={toggleMenu}
           onCartOpen={handleCartOpen}
           onAdminOpen={handleAdminOpen}
         />
-        
+
         <main>
           <HeroSection />
           <WhatMakesUsDifferentSection />
           <ProductsSection onProductSelect={handleProductSelect} />
-          
+
           <COASection />
-          
+
           {/* Disclaimer Section */}
           <section id="disclaimer" className="py-12 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4">
@@ -113,7 +133,7 @@ function App() {
               </div>
             </div>
           </section>
-          
+
           <AboutUsSection />
           <PaymentOptionsSection />
           <FAQSection />
@@ -121,9 +141,9 @@ function App() {
           <ShippingPolicySection />
           <ContactSection />
         </main>
-        
+
         <Footer />
-        
+
         {/* Modals */}
         {selectedProduct && (
           <ProductPage
@@ -132,7 +152,7 @@ function App() {
             onProductUpdate={handleProductUpdate}
           />
         )}
-        
+
         <ShoppingCart
           isOpen={isCartOpen}
           onClose={handleCartClose}
@@ -151,10 +171,11 @@ function App() {
             onClose={handleAdminLoginClose}
           />
         )}
-        
+
         <AdminPanel
           isOpen={isAdminOpen}
           onClose={handleAdminClose}
+          onLogout={handleAdminLogout}
         />
       </div>
     </CartProvider>
