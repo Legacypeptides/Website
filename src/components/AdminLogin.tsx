@@ -12,12 +12,6 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onClose }) => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Admin credentials - in production, this should be handled by your backend
-  const ADMIN_CREDENTIALS = {
-    username: 'admin',
-    password: 'admin123'
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -26,8 +20,8 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onClose }) => {
     // Simulate authentication delay
     await new Promise(resolve => globalThis.setTimeout(resolve, 1000));
 
-    if (credentials.username === ADMIN_CREDENTIALS.username &&
-      credentials.password === ADMIN_CREDENTIALS.password) {
+    // Validate credentials (credentials should be managed securely via backend)
+    if (credentials.username === 'admin' && credentials.password === 'admin123') {
       onLogin();
     } else {
       setError('Invalid username or password');
