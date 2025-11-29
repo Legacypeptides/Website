@@ -59,3 +59,4 @@ jobs:
           local-dir: ./dist/
           timeout: 180
           log-level: verbose
+          dangerous-clean-slate: true
