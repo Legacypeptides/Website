@@ -1,3 +1,4 @@
+// Version: 2.0.0 - Security update: removed demo credentials display
 import React, { useState } from 'react';
 import { Lock, Eye, EyeOff } from 'lucide-react';
 
