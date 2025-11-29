@@ -1,13 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
-    <title>Legacy Peptides</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="/" />
+  <title>Legacy Peptides</title>
+  <!-- COA thumbnails: keep real proportions (no cropping/distortion) -->
+  <style>
+    img[src*="/coas/"] {
+      width: 100% !important;
+      height: auto !important;
+      object-fit: contain !important;
+      aspect-ratio: auto !important;
+      display: block !important;
+      margin: 0 auto !important;
+      background: #fff !important;
+    }
+
+    /* If any wrapper forces height/cropping, unlock it */
+    div:has(> img[src*="/coas/"]) {
+      height: auto !important;
+      min-height: unset !important;
+      aspect-ratio: auto !important;
+      overflow: visible !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
