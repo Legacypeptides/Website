@@ -20,7 +20,7 @@ export const sendOrderWebhook = async (orderData: any) => {
       orderDate: orderData.order_date
     };
 
-    const response = await fetch('https://hook.us2.make.com/1n77klxoerm2kiog2jzznc4tn5lhoott', {
+    const response = await fetch('https://hook.us2.make.com/l914yer7bshfm0qruhh33dmskzkmxc6m', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

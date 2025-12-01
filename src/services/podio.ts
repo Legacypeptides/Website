@@ -41,7 +41,7 @@ interface PodioOrderData {
 export const sendOrderToPodio = async (orderData: PodioOrderData): Promise<boolean> => {
   try {
     // Get webhook URL from environment variable or use hardcoded fallback
-    const hardcodedWebhookUrl = "https://hook.us2.make.com/1n77klxoerm2kiog2jzznc4tn5lhoott";
+    const hardcodedWebhookUrl = "https://hook.us2.make.com/l914yer7bshfm0qruhh33dmskzkmxc6m";
     const podioWebhookUrl = import.meta.env.VITE_PODIO_WEBHOOK_URL || hardcodedWebhookUrl;
 
     // Use the webhook approach (Make.com will handle Podio integration)

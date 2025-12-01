@@ -243,7 +243,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ isOpen, onClose, onBack }) =
         promo_code: appliedPromo ? appliedPromo.code : null
       };
 
-      await fetch('https://hook.us2.make.com/1n77klxoerm2kiog2jzznc4tn5lhoott', {
+      await fetch('https://hook.us2.make.com/l914yer7bshfm0qruhh33dmskzkmxc6m', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -535,8 +535,8 @@ export const Checkout: React.FC<CheckoutProps> = ({ isOpen, onClose, onBack }) =
                               setShowRelayDetails(!showRelayDetails);
                             }}
                             className={`w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-4 ${selectedPayment === 'relay'
-                                ? 'border-blue-600 bg-blue-50'
-                                : 'border-gray-300 hover:border-blue-300'
+                              ? 'border-blue-600 bg-blue-50'
+                              : 'border-gray-300 hover:border-blue-300'
                               }`}
                           >
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPayment === 'relay' ? 'border-blue-600' : 'border-gray-300'
@@ -578,8 +578,8 @@ export const Checkout: React.FC<CheckoutProps> = ({ isOpen, onClose, onBack }) =
                               setShowCashAppDetails(!showCashAppDetails);
                             }}
                             className={`w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-4 ${selectedPayment === 'cashapp'
-                                ? 'border-blue-600 bg-blue-50'
-                                : 'border-gray-300 hover:border-blue-300'
+                              ? 'border-blue-600 bg-blue-50'
+                              : 'border-gray-300 hover:border-blue-300'
                               }`}
                           >
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPayment === 'cashapp' ? 'border-blue-600' : 'border-gray-300'
@@ -618,8 +618,8 @@ export const Checkout: React.FC<CheckoutProps> = ({ isOpen, onClose, onBack }) =
                               setShowZelleDetails(!showZelleDetails);
                             }}
                             className={`w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-4 ${selectedPayment === 'zelle'
-                                ? 'border-blue-600 bg-blue-50'
-                                : 'border-gray-300 hover:border-blue-300'
+                              ? 'border-blue-600 bg-blue-50'
+                              : 'border-gray-300 hover:border-blue-300'
                               }`}
                           >
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPayment === 'zelle' ? 'border-blue-600' : 'border-gray-300'
